@@ -55,6 +55,31 @@ public class AddNewJob extends javax.swing.JFrame {
         }
     }
 
+    
+    public void saveJobsToFile()
+    {
+        try{
+            
+            FileOutputStream file = new FileOutputStream ("Jobs.dat");
+            ObjectOutputStream outputFile = new ObjectOutputStream(file);
+            
+            for(int i = 0; i < jobs.size(); i++)
+            {
+                outputFile.writeObject(jobs.get(i));
+            }
+            outputFile.close();
+            
+            JOptionPane.showMessageDialog(null,"Successfully Saved !");
+            this.dispose();
+
+                    
+        }
+        catch(IOException e)
+        {
+            
+        }
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -142,7 +167,9 @@ public class AddNewJob extends javax.swing.JFrame {
         String name = jobName.getText().trim();
         String salary = jobSalary.getText().trim();
         
-        
+        Job job = new Job(Double.parseDouble(salary),name);
+        jobs.add(job);
+        saveJobsToFile();
         }
       
         

@@ -55,13 +55,5 @@ public class Employee implements Serializable {
 
     public void setStaffNr(int staffNr) {
         this.staffNr = staffNr;
-    }
-    
-    
-    
-    
-    
-    
-    
-    
+    }  
 }

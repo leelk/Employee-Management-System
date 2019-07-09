@@ -13,7 +13,7 @@ import java.text.*;
  *
  * @author Leel Karunaratne
  */
-public class AddEmployee extends javax.swing.JFrame {
+public final class AddEmployee extends javax.swing.JFrame {
 
     ArrayList<Job> jobs;
     ArrayList<Employee> employees;
@@ -27,8 +27,8 @@ public class AddEmployee extends javax.swing.JFrame {
         
         formatter = new DecimalFormat("#, ###.00");
         
-        jobs = new ArrayList<Job>();
-        employees = new ArrayList<Employee>(); 
+        jobs = new ArrayList<>();
+        employees = new ArrayList<>(); 
         populateArrayList(); 
         
         String [] jobsArray = new String [jobs.size()];
@@ -37,69 +37,48 @@ public class AddEmployee extends javax.swing.JFrame {
             jobsArray[i] = jobs.get(i).getNameOfJob() + ", R" + formatter.format(jobs.get(i).getSalary());
         }
                 jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(jobsArray));
-                
-                
-                
-      
+  
     }
-    
-    
-    
     public void saveEmployeesToFile()
     {
         try{
             
             FileOutputStream file = new FileOutputStream ("Employees.dat");
-            ObjectOutputStream outputFile = new ObjectOutputStream(file);
-            
-            for(int i = 0; i < employees.size(); i++)
-            {
-                outputFile.writeObject(employees.get(i));
+            try (ObjectOutputStream outputFile = new ObjectOutputStream(file)) {
+                for(int i = 0; i < employees.size(); i++)
+                {
+                    outputFile.writeObject(employees.get(i));
+                }
             }
-            outputFile.close();
             
             JOptionPane.showMessageDialog(null,"Successfully Saved !");
-            this.dispose();
-
-                    
+            this.dispose();          
         }
         catch(IOException e)
         {
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
-    }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    }  
       public void populateArrayList(){
          
         try
         {
             FileInputStream file = new FileInputStream("Jobs.dat");
-            ObjectInputStream inputFile = new ObjectInputStream(file);
-            
-            boolean endOfFile = false;
-            while (!endOfFile)
-            {
-                try{
-                    jobs.add((Job) inputFile.readObject());
-                }
-                catch(EOFException e ){
-                    endOfFile = true;
-                }
-                catch (Exception f){
-                    JOptionPane.showMessageDialog(null,f.getMessage());
+            try (ObjectInputStream inputFile = new ObjectInputStream(file)) {
+                boolean endOfFile = false;
+                while (!endOfFile)
+                {
+                    try{
+                        jobs.add((Job) inputFile.readObject());
+                    }
+                    catch(EOFException e ){
+                        endOfFile = true;
+                    }
+                    catch (IOException | ClassNotFoundException f){
+                        JOptionPane.showMessageDialog(null,f.getMessage());
+                    }
                 }
             }
-            
-            inputFile.close();
         }
         catch (IOException e){
             JOptionPane.showMessageDialog(null,e.getMessage());
@@ -109,23 +88,21 @@ public class AddEmployee extends javax.swing.JFrame {
         try
         {
             FileInputStream file2 = new FileInputStream("Emplyees.dat");
-            ObjectInputStream inputFile2 = new ObjectInputStream(file2);
-            
-            boolean endOfFile = false;
-            while (!endOfFile)
-            {
-                try{
-                    employees.add((Employee) inputFile2.readObject());
-                }
-                catch(EOFException e ){
-                    endOfFile = true;
-                }
-                catch (Exception f){
-                    JOptionPane.showMessageDialog(null,f.getMessage());
+            try (ObjectInputStream inputFile2 = new ObjectInputStream(file2)) {
+                boolean endOfFile = false;
+                while (!endOfFile)
+                {
+                    try{
+                        employees.add((Employee) inputFile2.readObject());
+                    }
+                    catch(EOFException e ){
+                        endOfFile = true;
+                    }
+                    catch (IOException | ClassNotFoundException f){
+                        JOptionPane.showMessageDialog(null,f.getMessage());
+                    }
                 }
             }
-            
-            inputFile2.close();
         }
         catch (IOException e){
             JOptionPane.showMessageDialog(null,e.getMessage());
@@ -263,8 +240,6 @@ public class AddEmployee extends javax.swing.JFrame {
             saveEmployeesToFile();
             
         }
-        
-        
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
@@ -301,7 +276,6 @@ public class AddEmployee extends javax.swing.JFrame {
             }
         });
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JComboBox<String> jComboBox1;

@@ -13,7 +13,7 @@ import java.io.*;
  *
  * @author Leel Karunaratne
  */
-public class AddNewJob extends javax.swing.JFrame {
+public final class AddNewJob extends javax.swing.JFrame {
 
     ArrayList<Job> jobs;
     
@@ -23,60 +23,52 @@ public class AddNewJob extends javax.swing.JFrame {
      */
     public AddNewJob() {
         initComponents();
-        jobs = new ArrayList<Job>();
+        jobs = new ArrayList<>();
         populateArrayList();
     }
-    
     public void populateArrayList(){
          
         try
         {
             FileInputStream file = new FileInputStream("Jobs.dat");
-            ObjectInputStream inputFile = new ObjectInputStream(file);
-            
-            boolean endOfFile = false;
-            while (!endOfFile)
-            {
-                try{
-                    jobs.add((Job) inputFile.readObject());
-                }
-                catch(EOFException e ){
-                    endOfFile = true;
-                }
-                catch (Exception f){
-                    JOptionPane.showMessageDialog(null,f.getMessage());
+            try (ObjectInputStream inputFile = new ObjectInputStream(file)) {
+                boolean endOfFile = false;
+                while (!endOfFile)
+                {
+                    try{
+                        jobs.add((Job) inputFile.readObject());
+                    }
+                    catch(EOFException e ){
+                        endOfFile = true;
+                    }
+                    catch (IOException | ClassNotFoundException f){
+                        JOptionPane.showMessageDialog(null,f.getMessage());
+                    }
                 }
             }
-            
-            inputFile.close();
         }
         catch (IOException e){
             JOptionPane.showMessageDialog(null,e.getMessage());
         }
     }
-
-    
     public void saveJobsToFile()
     {
         try{
             
             FileOutputStream file = new FileOutputStream ("Jobs.dat");
-            ObjectOutputStream outputFile = new ObjectOutputStream(file);
-            
-            for(int i = 0; i < jobs.size(); i++)
-            {
-                outputFile.writeObject(jobs.get(i));
+            try (ObjectOutputStream outputFile = new ObjectOutputStream(file)) {
+                for(int i = 0; i < jobs.size(); i++)
+                {
+                    outputFile.writeObject(jobs.get(i));
+                }
             }
-            outputFile.close();
             
             JOptionPane.showMessageDialog(null,"Successfully Saved !");
-            this.dispose();
-
-                    
+            this.dispose();           
         }
         catch(IOException e)
         {
-            
+            JOptionPane.showMessageDialog(null,e);
         }
     }
     
